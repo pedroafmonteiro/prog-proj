@@ -17,7 +17,6 @@ namespace svg
             throw runtime_error("Unable to load " + svg_file);
         }
         XMLElement *xml_elem = doc.RootElement();
-        vector<SVGElement *> shapes;
 
         dimensions.x = xml_elem->IntAttribute("width");
         dimensions.y = xml_elem->IntAttribute("height");
