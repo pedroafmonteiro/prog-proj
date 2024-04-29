@@ -28,4 +28,4 @@ To complete the `readSVG` function in `readSVG.cpp`, we need to traverse the XML
 
 6. Continue this process until all child nodes of the root SVG element have been traversed and processed.
 
-Common erros: if an SVG element has missing or invalid attributes or if an unknown SVG element type is encountered.
+Common errors: if an SVG element has missing or invalid attributes or if an unknown SVG element type is encountered.
