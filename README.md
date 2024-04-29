@@ -10,7 +10,7 @@ This project concerns the conversion of images from the SVG vectorial format to 
 - up202305431 Narciso António Terrão Barroso
 - up202307242 Pedro André Freitas Monteiro
 
-## Accomplished tasks
+## Tasks
 
 ### SVG reading logic in readSVG.cpp
 
