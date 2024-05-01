@@ -38,5 +38,16 @@ namespace svg
         Point center;
         Point radius;
     };
+
+    class Circle : public Ellipse
+    {
+    public:
+        Circle(const Color &fill, const Point &center, const int &radius) : Ellipse(fill, center, {radius , radius}) { };
+
+    private:
+        Color fill;
+        Point center;
+        int radius;
+    };
 }
 #endif
