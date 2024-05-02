@@ -54,11 +54,11 @@ namespace svg
     class Polyline : public SVGElement
     {
     public:
-        Polyline(const std::vector<Point *> &points, const Color &stroke);
+        Polyline(const std::vector<Point> &points, const Color &stroke);
         void draw(PNGImage &img) const override;
     
     private:
-        std::vector<Point *> points;
+        std::vector<Point> points;
         Color stroke;
     };
 
@@ -76,18 +76,24 @@ namespace svg
     class Polygon : public SVGElement
     {
     public:
-        Polygon(const std::vector<Point *> &points, const Color &fill);
+        Polygon(const std::vector<Point> &points, const Color &fill);
         void draw(PNGImage &img) const override;
 
     private:
-        std::vector<Point *> points;
+        std::vector<Point> points;
         Color fill;
     };
 
     class Rect : public Polygon
     {
     public:
-        Rect(const Point &corner, const int &width, const int &height, const Color &fill) { };
+        Rect(const Point &corner, const int &width, const int &height, const Color &fill) : Polygon({Point(corner), Point({corner.x + width, corner.y}), Point({corner.x + width, corner.y + height}), Point({corner.x, corner.y + height})}, fill) { };
+        void draw(PNGImage &img) const override;
+    
+    private:
+        Point corner;
+        int width, height;
+        Color fill;
     };
 }
 #endif
