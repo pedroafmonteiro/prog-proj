@@ -43,11 +43,51 @@ namespace svg
     {
     public:
         Circle(const Color &fill, const Point &center, const int &radius) : Ellipse(fill, center, {radius , radius}) { };
+        void draw(PNGImage &img) const override;
 
     private:
         Color fill;
         Point center;
         int radius;
+    };
+
+    class Polyline : public SVGElement
+    {
+    public:
+        Polyline(const std::vector<Point *> &points, const Color &stroke);
+        void draw(PNGImage &img) const override;
+    
+    private:
+        std::vector<Point *> points;
+        Color stroke;
+    };
+
+    class Line : public Polyline
+    {
+    public:
+        Line(const Point &start, const Point &end, const Color &stroke) : Polyline({&start, &end}, stroke) { };
+        void draw(PNGImage &img) const override;
+
+    private:
+        Point start, end;
+        Color stroke;
+    };
+
+    class Polygon : public SVGElement
+    {
+    public:
+        Polygon(const std::vector<Point *> &points, const Color &fill);
+        void draw(PNGImage &img) const override;
+
+    private:
+        std::vector<Point *> points;
+        Color fill;
+    };
+
+    class Rect : public Polygon
+    {
+    public:
+        Rect(const Point &corner, const int &width, const int &height, const Color &fill) { };
     };
 }
 #endif
