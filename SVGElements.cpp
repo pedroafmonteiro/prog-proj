@@ -14,9 +14,15 @@ namespace svg
      */
     Ellipse::Ellipse(const Color &fill,
                      const Point &center,
-                     const Point &radius)
+                     const Point &radius, 
+                     const std::string &id, 
+                     const std::string &transform, 
+                     const Point &transformOrigin)
         : fill(fill), center(center), radius(radius)
     {
+        this->id = id;
+        this->transform = transform;
+        this->transformOrigin = transformOrigin;
     }
 
     /**
@@ -46,9 +52,15 @@ namespace svg
      * @param stroke The color of the polyline's stroke.
      */
     Polyline::Polyline(const std::vector<Point> &points,
-                       const Color &stroke)
+                       const Color &stroke, 
+                       const std::string &id, 
+                       const std::string &transform, 
+                       const Point &transformOrigin)
         : points(points), stroke(stroke)
     {
+        this->id = id;
+        this->transform = transform;
+        this->transformOrigin = transformOrigin;
     }
 
     /**
@@ -81,9 +93,15 @@ namespace svg
      * @param fill The fill color of the polygon.
      */
     Polygon::Polygon(const std::vector<Point> &points, 
-                     const Color &fill)
+                     const Color &fill, 
+                     const std::string &id, 
+                     const std::string &transform, 
+                     const Point &transformOrigin)
         : points(points), fill(fill)
     {
+        this->id = id;
+        this->transform = transform;
+        this->transformOrigin = transformOrigin;
     }
 
     /**

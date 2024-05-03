@@ -34,21 +34,26 @@ namespace svg
     /**
      * @class Ellipse
      * @brief Represents an ellipse SVG element.
-     * 
-     * The Ellipse class inherits from the SVGElement class and provides
-     * functionality to draw an ellipse on a PNGImage.
      */
     class Ellipse : public SVGElement
     {
     public:
         /**
-         * @brief Constructs an Ellipse object with the specified fill color, center point, and radius.
+         * @brief Constructs an Ellipse object.
          * 
          * @param fill The fill color of the ellipse.
          * @param center The center point of the ellipse.
          * @param radius The radius of the ellipse.
+         * @param id The id of the ellipse.
+         * @param transform Type of transformation for the ellipse.
+         * @param transformOrigin The point where the tranformation is done.
          */
-        Ellipse(const Color &fill, const Point &center, const Point &radius);
+        Ellipse(const Color &fill,
+                const Point &center, 
+                const Point &radius, 
+                const std::string &id = "", 
+                const std::string &transform = "", 
+                const Point &transformOrigin = {0, 0});  
 
         /**
          * @brief Draws the ellipse on the specified PNGImage.
@@ -66,9 +71,6 @@ namespace svg
     /**
      * @class Circle
      * @brief Represents a circle shape.
-     * 
-     * The Circle class inherits from the Ellipse class and represents a circle shape
-     * with a specified fill color, center point, and radius.
      */
     class Circle : public Ellipse
     {
@@ -79,8 +81,17 @@ namespace svg
          * @param fill The fill color of the circle.
          * @param center The center point of the circle.
          * @param radius The radius of the circle.
+         * @param id The id of the circle.
+         * @param transform Type of transformation for the circle.
+         * @param transformOrigin The point where the tranformation is done.
          */
-        Circle(const Color &fill, const Point &center, const int &radius) : Ellipse(fill, center, {radius , radius}) { };
+        Circle(const Color &fill, 
+               const Point &center, 
+               const int &radius, 
+               const std::string &id = "", 
+               const std::string &transform = "", 
+               const Point &transformOrigin = {0, 0}) 
+        : Ellipse(fill, center, {radius , radius}, id, transform, transformOrigin) { };
 
         /**
          * @brief Draws the circle on the specified PNG image.
@@ -98,9 +109,6 @@ namespace svg
     /**
      * @class Polyline
      * @brief Represents a polyline SVG element.
-     * 
-     * The Polyline class inherits from the SVGElement class and provides
-     * functionality to draw a polyline on a PNGImage.
      */
     class Polyline : public SVGElement
     {
@@ -110,8 +118,15 @@ namespace svg
          * 
          * @param points The vector of points that define the polyline.
          * @param stroke The color of the polyline stroke.
+         * @param id The id for the polyline.
+         * @param transform Type of transformation for the polyline
+         * @param transformOrigin The point where the tranformation is done.
          */
-        Polyline(const std::vector<Point> &points, const Color &stroke);
+        Polyline(const std::vector<Point> &points, 
+                 const Color &stroke, 
+                 const std::string &id = "", 
+                 const std::string &transform = "", 
+                 const Point &transformOrigin = {0, 0});
 
         /**
          * @brief Draws the polyline on the given PNGImage.
@@ -128,8 +143,6 @@ namespace svg
     /**
      * @class Line
      * @brief Represents a line element in an SVG image.
-     * 
-     * The Line class inherits from the Polyline class and adds functionality specific to lines.
      */
     class Line : public Polyline
     {
@@ -140,8 +153,17 @@ namespace svg
          * @param start The starting point of the line.
          * @param end The ending point of the line.
          * @param stroke The color of the line stroke.
+         * @param id The id of the line.
+         * @param transform Type of transformation for the line.
+         * @param transformOrigin The point where the tranformation is done.
          */
-        Line(const Point &start, const Point &end, const Color &stroke) : Polyline({&start, &end}, stroke) { };
+        Line(const Point &start, 
+             const Point &end, 
+             const Color &stroke, 
+             const std::string &id = "", 
+             const std::string &transform = "", 
+             const Point &transformOrigin = {0, 0}) 
+        : Polyline({&start, &end}, stroke, id, transform, transformOrigin) { };
 
         /**
          * @brief Draws the line on the specified PNG image.
@@ -159,9 +181,6 @@ namespace svg
     /**
      * @class Polygon
      * @brief Represents a polygon SVG element.
-     * 
-     * The `Polygon` class is a derived class of `SVGElement` and represents a polygon shape in an SVG image.
-     * It contains a vector of points that define the vertices of the polygon and a fill color.
      */
     class Polygon : public SVGElement
     {
@@ -171,8 +190,15 @@ namespace svg
          * 
          * @param points The vector of points that define the vertices of the polygon.
          * @param fill The fill color of the polygon.
+         * @param id The id for the polygon.
+         * @param transform Type of transformation for the polygon.
+         * @param transformOrigin The point where the tranformation is done.
          */
-        Polygon(const std::vector<Point> &points, const Color &fill);
+        Polygon(const std::vector<Point> &points, 
+                const Color &fill, 
+                const std::string &id = "", 
+                const std::string &transform = "", 
+                const Point &transformOrigin = {0, 0});
 
         /**
          * @brief Draws the polygon on the given `PNGImage`.
@@ -189,10 +215,6 @@ namespace svg
     /**
      * @class Rect
      * @brief Represents a rectangle shape.
-     * 
-     * The `Rect` class is a derived class of the `Polygon` class and represents a rectangle shape.
-     * It inherits the properties and methods of the `Polygon` class and adds additional properties
-     * and methods specific to rectangles.
      */
     class Rect : public Polygon
     {
@@ -205,7 +227,14 @@ namespace svg
          * @param height The height of the rectangle.
          * @param fill The fill color of the rectangle.
          */
-        Rect(const Point &corner, const int &width, const int &height, const Color &fill) : Polygon({Point(corner), Point({corner.x + width, corner.y}), Point({corner.x + width, corner.y + height}), Point({corner.x, corner.y + height})}, fill) { };
+        Rect(const Point &corner, 
+             const int &width, 
+             const int &height, 
+             const Color &fill, 
+             const std::string &id = "", 
+             const std::string &transform = "", 
+             const Point &transformOrigin = {0, 0}) 
+        : Polygon({Point(corner), Point({corner.x + width, corner.y}), Point({corner.x + width, corner.y + height}), Point({corner.x, corner.y + height})}, fill, id, transform, transformOrigin) { };
 
         /**
          * @brief Draws the rectangle on the specified image.
