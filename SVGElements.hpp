@@ -62,7 +62,7 @@ namespace svg
          */
         void draw(PNGImage &img) const override;
 
-    private:
+    protected:
         Color fill;     ///< The fill color of the ellipse.
         Point center;   ///< The center point of the ellipse.
         Point radius;   ///< The radius of the ellipse.
@@ -85,25 +85,20 @@ namespace svg
          * @param transform Type of transformation for the circle.
          * @param transformOrigin The point where the tranformation is done.
          */
-        Circle(const Color &fill, 
-               const Point &center, 
-               const int &radius, 
-               const std::string &id = "", 
-               const std::string &transform = "", 
-               const Point &transformOrigin = {0, 0}) 
-        : Ellipse(fill, center, {radius , radius}, id, transform, transformOrigin) { };
+         Circle(const Color &fill, 
+             const Point &center, 
+             const int &radius, 
+             const std::string &id = "", 
+             const std::string &transform = "", 
+             const Point &transformOrigin = {0, 0}) 
+         : Ellipse(fill, center, {radius , radius}, id, transform, transformOrigin) { };
 
-        /**
-         * @brief Draws the circle on the specified PNG image.
-         * 
-         * @param img The PNG image to draw the circle on.
-         */
-        void draw(PNGImage &img) const override;
-
-    private:
-        Color fill;     ///< The fill color of the circle.
-        Point center;   ///< The center point of the circle.
-        int radius;     ///< The radius of the circle.
+         /**
+          * @brief Draws the circle on the specified PNG image.
+          * 
+          * @param img The PNG image to draw the circle on.
+          */
+         void draw(PNGImage &img) const override;
     };
 
     /**
@@ -135,7 +130,7 @@ namespace svg
          */
         void draw(PNGImage &img) const override;
 
-    private:
+    protected:
         std::vector<Point> points; ///< The vector of points that define the polyline.
         Color stroke;              ///< The color of the polyline stroke.
     };
@@ -207,7 +202,7 @@ namespace svg
          */
         void draw(PNGImage &img) const override;
 
-    private:
+    protected:
         std::vector<Point> points; ///< The vector of points that define the vertices of the polygon.
         Color fill;                ///< The fill color of the polygon.
     };

@@ -1,6 +1,7 @@
 
 #include <iostream>
 #include "SVGElements.hpp"
+#include "Color.hpp"
 #include "external/tinyxml2/tinyxml2.h"
 
 using namespace std;
@@ -21,7 +22,15 @@ namespace svg
         dimensions.x = xml_elem->IntAttribute("width");
         dimensions.y = xml_elem->IntAttribute("height");
         
-        // TODO complete code -->
+        for (XMLElement *child = xml_elem->FirstChildElement(); child != nullptr; child = child->NextSiblingElement()) {
+            if (strcmp(child->Name(), "ellipse") == 0) {
+                Ellipse* ellipse_object = new Ellipse(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, {child->IntAttribute("rx"), child->IntAttribute("ry")});
+                svg_elements.push_back(ellipse_object);
+            } else if (strcmp(child->Name(), "circle") == 0) {
+                Circle* circle_object = new Circle(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, child->IntAttribute("r"));
+                svg_elements.push_back(circle_object);
+            }
+        }
         
     }
 }

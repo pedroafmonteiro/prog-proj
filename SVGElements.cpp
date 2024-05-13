@@ -42,7 +42,7 @@ namespace svg
      */
     void Circle::draw(PNGImage &img) const
     {
-        img.draw_ellipse(center, {radius, radius}, fill);
+        img.draw_ellipse(center, radius, fill);
     }
 
     /**
