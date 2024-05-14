@@ -158,7 +158,7 @@ namespace svg
              const std::string &id = "", 
              const std::string &transform = "", 
              const Point &transformOrigin = {0, 0}) 
-        : Polyline({start, end}, stroke, id, transform, transformOrigin) { };
+        : Polyline({start, end}, stroke, id, transform, transformOrigin), start(start), end(end) { };
 
         /**
          * @brief Draws the line on the specified PNG image.
@@ -170,7 +170,6 @@ namespace svg
     private:
         Point start;    ///< The starting point of the line.
         Point end;      ///< The ending point of the line.
-        Color stroke;   ///< The color of the line stroke.
     };
 
     /**
@@ -229,7 +228,7 @@ namespace svg
              const std::string &id = "", 
              const std::string &transform = "", 
              const Point &transformOrigin = {0, 0}) 
-        : Polygon({Point(corner), Point({corner.x + width-1, corner.y}), Point({corner.x + width-1, corner.y + height-1}), Point({corner.x, corner.y + height-1})}, fill, id, transform, transformOrigin) { };
+        : Polygon({Point(corner), Point({corner.x + width-1, corner.y}), Point({corner.x + width-1, corner.y + height-1}), Point({corner.x, corner.y + height-1})}, fill, id, transform, transformOrigin), corner(corner), width(width), height(height) { };
 
         /**
          * @brief Draws the rectangle on the specified image.
@@ -242,7 +241,6 @@ namespace svg
         Point corner;   ///< The top-left corner of the rectangle.
         int width;      ///< The width of the rectangle.
         int height;     ///< The height of the rectangle.
-        Color fill;     ///< The fill color of the rectangle.
     };
 }
 #endif
