@@ -38,7 +38,7 @@ namespace svg
                     char virgula;
                     iss >> virgula;
                     iss >> temp.y;
-                    polypontos.pushback(temp);
+                    polypontos.push_back(temp);
                 }
                 Polyline* polyline_object = new Polyline(polypontos,parse_color(child->Attribute("stroke")) );
                 svg_elements.push_back(polyline_object);
@@ -53,7 +53,7 @@ namespace svg
                     char virgula;
                     iss >> virgula;
                     iss >> temp.y;
-                    polypontos.pushback(temp);
+                    polypontos.push_back(temp);
                 }
                 Polygon* polygon_object = new Polygon(polypontos,parse_color(child->Attribute("fill")));
                 svg_elements.push_back(polygon_object);
