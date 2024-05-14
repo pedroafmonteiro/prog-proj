@@ -121,7 +121,7 @@ namespace svg
      */
     void Rect::draw(PNGImage &img) const
     {
-        img.draw_polygon({Point(corner), Point({corner.x + width, corner.y}), Point({corner.x + width, corner.y + height}), Point({corner.x, corner.y + height})}, fill);
+        img.draw_polygon(points, fill);
     }
 
 }

@@ -10,8 +10,14 @@ using namespace tinyxml2;
 
 namespace svg
 {
-    void recursive(XMLElement *pParent,vector<SVGElement *>& shapes){
-        vector<SVGElement *> svg_elements;
+    void transformdot(string& prestring){
+        for (char& c : prestring){
+            if (c==','){
+                c=' ';
+            }
+        }
+    }
+    void recursive(XMLElement *pParent,vector<SVGElement *>& svg_elements){
         for (XMLElement *child = pParent->FirstChildElement(); child != nullptr; child = child->NextSiblingElement()) {
             vector<SVGElement *> figsofgrupos;
             if (strcmp(child->Name(), "ellipse") == 0) {
@@ -21,12 +27,12 @@ namespace svg
                 Circle* circle_object = new Circle(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, child->IntAttribute("r"));
                 figsofgrupos.push_back(circle_object);
             } else if (strcmp(child->Name(), "polyline") == 0) {
-                istringstream iss(child->Attribute("points"));
+                string pontos = child->Attribute("points");
+                transformdot(pontos);
+                istringstream iss(pontos);
                 vector<Point> polypontos;
                 Point temp;
                 while (iss >> temp.x ){
-                    char virgula;
-                    iss >> virgula;
                     iss >> temp.y;
                     polypontos.push_back(temp);
                 }
@@ -36,12 +42,12 @@ namespace svg
                 Line* line_object = new Line({child->IntAttribute("x1"),child->IntAttribute("y1")},{child->IntAttribute("x2"),child->IntAttribute("y2")},parse_color(child->Attribute("stroke")));
                 figsofgrupos.push_back(line_object);
             } else if (strcmp(child->Name(), "polygon") == 0) {
-                istringstream iss(child->Attribute("points"));
+                string pontos = child->Attribute("points");
+                transformdot(pontos);
+                istringstream iss(pontos);
                 vector<Point> polypontos;
                 Point temp;
                 while (iss >> temp.x ){
-                    char virgula;
-                    iss >> virgula;
                     iss >> temp.y;
                     polypontos.push_back(temp);
                 }

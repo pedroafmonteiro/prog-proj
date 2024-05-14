@@ -158,7 +158,7 @@ namespace svg
              const std::string &id = "", 
              const std::string &transform = "", 
              const Point &transformOrigin = {0, 0}) 
-        : Polyline({&start, &end}, stroke, id, transform, transformOrigin) { };
+        : Polyline({start, end}, stroke, id, transform, transformOrigin) { };
 
         /**
          * @brief Draws the line on the specified PNG image.
@@ -229,7 +229,7 @@ namespace svg
              const std::string &id = "", 
              const std::string &transform = "", 
              const Point &transformOrigin = {0, 0}) 
-        : Polygon({Point(corner), Point({corner.x + width, corner.y}), Point({corner.x + width, corner.y + height}), Point({corner.x, corner.y + height})}, fill, id, transform, transformOrigin) { };
+        : Polygon({Point(corner), Point({corner.x + width-1, corner.y}), Point({corner.x + width-1, corner.y + height-1}), Point({corner.x, corner.y + height-1})}, fill, id, transform, transformOrigin) { };
 
         /**
          * @brief Draws the rectangle on the specified image.
