@@ -10,6 +10,53 @@ using namespace tinyxml2;
 
 namespace svg
 {
+    void recursive(XMLElement *pParent,vector<SVGElement *>& shapes){
+        vector<SVGElement *> svg_elements;
+        for (XMLElement *child = xml_elem->FirstChildElement(); child != nullptr; child = child->NextSiblingElement()) {
+            vector<SVGElement *> figsofgrupos;
+            if (strcmp(child->Name(), "ellipse") == 0) {
+                Ellipse* ellipse_object = new Ellipse(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, {child->IntAttribute("rx"), child->IntAttribute("ry")});
+                figsofgrupos.push_back(ellipse_object);
+            } else if (strcmp(child->Name(), "circle") == 0) {
+                Circle* circle_object = new Circle(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, child->IntAttribute("r"));
+                figsofgrupos.push_back(circle_object);
+            } else if (strcmp(child->Name(), "polyline") == 0) {
+                istringstream iss(child->Attribute("points"));
+                vector<Point> polypontos;
+                Point temp;
+                while (iss >> temp.x ){
+                    char virgula;
+                    iss >> virgula;
+                    iss >> temp.y;
+                    polypontos.pushback(temp);
+                }
+                Polyline* polyline_object = new Polyline(polypontos,parse_color(child->Attribute("stroke")) );
+                figsofgrupos.push_back(polyline_object);
+            } else if (strcmp(child->Name(), "line") == 0) {
+                Line* line_object = new Line({child->IntAttribute("x1"),child->IntAttribute("y1")},{child->IntAttribute("x2"),child->IntAttribute("y2")},parse_color(child->Attribute("stroke")));
+                figsofgrupos.push_back(line_object);
+            } else if (strcmp(child->Name(), "polygon") == 0) {
+                istringstream iss(child->Attribute("points"));
+                vector<Point> polypontos;
+                Point temp;
+                while (iss >> temp.x ){
+                    char virgula;
+                    iss >> virgula;
+                    iss >> temp.y;
+                    polypontos.pushback(temp);
+                }
+                Polygon* polygon_object = new Polygon(polypontos,parse_color(child->Attribute("fill")));
+                figsofgrupos.push_back(polygon_object);
+            } else if (strcmp(child->Name(), "rect") == 0) {
+                Rect* rect_object = new Rect({child->IntAttribute("x"),child->IntAttribute("y")},child->IntAttribute("width"),child->IntAttribute("height"),parse_color(child->Attribute("fill")));
+                figsofgrupos.push_back(rect_object);
+            } else if (strcmp(child->Name(), "g") == 0) {
+                recursive(child,figsofgrupos);
+            }
+            svg_elements.insert(svg_elements.end(),figsofgrupos.begin(),figsofgrupos.end());
+        }
+    }
+
     void readSVG(const string& svg_file, Point& dimensions, vector<SVGElement *>& svg_elements)
     {
         XMLDocument doc;
