@@ -12,7 +12,7 @@ namespace svg
 {
     void recursive(XMLElement *pParent,vector<SVGElement *>& shapes){
         vector<SVGElement *> svg_elements;
-        for (XMLElement *child = xml_elem->FirstChildElement(); child != nullptr; child = child->NextSiblingElement()) {
+        for (XMLElement *child = pParent->FirstChildElement(); child != nullptr; child = child->NextSiblingElement()) {
             vector<SVGElement *> figsofgrupos;
             if (strcmp(child->Name(), "ellipse") == 0) {
                 Ellipse* ellipse_object = new Ellipse(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, {child->IntAttribute("rx"), child->IntAttribute("ry")});
@@ -28,7 +28,7 @@ namespace svg
                     char virgula;
                     iss >> virgula;
                     iss >> temp.y;
-                    polypontos.pushback(temp);
+                    polypontos.push_back(temp);
                 }
                 Polyline* polyline_object = new Polyline(polypontos,parse_color(child->Attribute("stroke")) );
                 figsofgrupos.push_back(polyline_object);
@@ -43,7 +43,7 @@ namespace svg
                     char virgula;
                     iss >> virgula;
                     iss >> temp.y;
-                    polypontos.pushback(temp);
+                    polypontos.push_back(temp);
                 }
                 Polygon* polygon_object = new Polygon(polypontos,parse_color(child->Attribute("fill")));
                 figsofgrupos.push_back(polygon_object);
