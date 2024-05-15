@@ -15,7 +15,7 @@ namespace svg
         SVGElement();
         virtual ~SVGElement();
         virtual void draw(PNGImage &img) const = 0;
-
+        virtual SVGElement* copy() const=0; // Criar novo elem/pointer para alteracao
         std::string id;
         std::string transform;
         Point transformOrigin;
@@ -61,6 +61,7 @@ namespace svg
          * @param img The PNGImage to draw the ellipse on.
          */
         void draw(PNGImage &img) const override;
+        SVGElement* copy() const override;
 
     protected:
         Color fill;     ///< The fill color of the ellipse.
@@ -99,6 +100,7 @@ namespace svg
           * @param img The PNG image to draw the circle on.
           */
          void draw(PNGImage &img) const override;
+         SVGElement* copy() const override;
     };
 
     /**
@@ -129,6 +131,7 @@ namespace svg
          * @param img The PNGImage to draw the polyline on.
          */
         void draw(PNGImage &img) const override;
+        SVGElement* copy() const override;
 
     protected:
         std::vector<Point> points; ///< The vector of points that define the polyline.
@@ -166,6 +169,7 @@ namespace svg
          * @param img The PNG image to draw the line on.
          */
         void draw(PNGImage &img) const override;
+        SVGElement* copy() const override;
 
     private:
         Point start;    ///< The starting point of the line.
@@ -200,6 +204,7 @@ namespace svg
          * @param img The `PNGImage` on which the polygon will be drawn.
          */
         void draw(PNGImage &img) const override;
+        SVGElement* copy() const override;
 
     protected:
         std::vector<Point> points; ///< The vector of points that define the vertices of the polygon.

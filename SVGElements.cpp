@@ -34,7 +34,9 @@ namespace svg
     {
         img.draw_ellipse(center, radius, fill);
     }
-
+    SVGElement* Ellipse::copy() const{
+        return new Ellipse(fill,center,radius,id,transform,transformOrigin);
+    }
     /**
      * @brief Draws a circle on the specified PNGImage.
      *
@@ -44,7 +46,9 @@ namespace svg
     {
         img.draw_ellipse(center, radius, fill);
     }
-
+    SVGElement* Circle::copy() const{
+        return new Circle(fill,center,radius.x,id,transform,transformOrigin);
+    }
     /**
      * @brief Constructs a Polyline object with the given points and stroke color.
      * 
@@ -75,7 +79,9 @@ namespace svg
             img.draw_line(points[i], points[i + 1], stroke);
         }
     }
-
+    SVGElement* Polyline::copy() const{
+        return new Polyline(points,stroke,id,transform,transformOrigin);
+    }
     /**
      * @brief Draws a line on the given PNGImage.
      *
@@ -85,7 +91,9 @@ namespace svg
     {
         img.draw_line(start, end, stroke);
     }
-
+    SVGElement* Line::copy() const{
+        return new Line(start,end,stroke,id,transform,transformOrigin);
+    }
     /**
      * @brief Constructs a Polygon object with the given points and fill color.
      * 
@@ -113,7 +121,9 @@ namespace svg
     {
         img.draw_polygon(points, fill);
     }
-
+    SVGElement* Polygon::copy() const{
+        return new Polygon(points,fill,id,transform,transformOrigin);
+    }
     /**
      * @brief Draws a rectangle on the given PNGImage.
      *

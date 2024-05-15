@@ -4,12 +4,28 @@
 #include "Color.hpp"
 #include "external/tinyxml2/tinyxml2.h"
 #include <sstream>
+#include <map>
 
 using namespace std;
 using namespace tinyxml2;
 
 namespace svg
 {
+    void identificadorload(vector<SVGElement*>& pFigs, map<string,vector<SVGElement *>>& identif,const string& ref){
+        vector<SVGElement*> temp;
+        string ident = ref.substr(1,string::npos); //tirar o '#' do href(referencia)//
+        temp = identif[ident];
+        for (SVGElement* elem:temp){
+            pFigs.push_back(elem->copy());
+        }
+    }
+    void identificadorsave(const vector<SVGElement*>& pFigs, map<string,vector<SVGElement *>>& identif,const string& ident){
+        vector<SVGElement*> temp;
+        for (SVGElement* elem:pFigs){
+            temp.push_back(elem->copy());
+        }
+        identif[ident]=temp;
+    }
     void transformdot(string& prestring){
         for (char& c : prestring){
             if (c==','){
@@ -17,7 +33,7 @@ namespace svg
             }
         }
     }
-    void recursive(XMLElement *pParent,vector<SVGElement *>& svg_elements){
+    void recursive(XMLElement *pParent,vector<SVGElement *>& svg_elements,map<string,vector<SVGElement*>>& identif){
         for (XMLElement *child = pParent->FirstChildElement(); child != nullptr; child = child->NextSiblingElement()) {
             vector<SVGElement *> figsofgrupos;
             if (strcmp(child->Name(), "ellipse") == 0) {
@@ -57,12 +73,23 @@ namespace svg
                 Rect* rect_object = new Rect({child->IntAttribute("x"),child->IntAttribute("y")},child->IntAttribute("width"),child->IntAttribute("height"),parse_color(child->Attribute("fill")));
                 figsofgrupos.push_back(rect_object);
             } else if (strcmp(child->Name(), "g") == 0) {
-                recursive(child,figsofgrupos);
+                recursive(child,figsofgrupos,identif);
+            } else if (strcmp(child->Name(), "use") == 0) {
+                string ref = child->Attribute("href");
+                identificadorload(figsofgrupos,identif,ref);
             }
+            string ident="";
+            if (child->Attribute("id")){
+                ident = child->Attribute("id");
+                identificadorsave(figsofgrupos,identif,ident);
+
+            } 
             svg_elements.insert(svg_elements.end(),figsofgrupos.begin(),figsofgrupos.end());
         }
     }
-
+    void delmapa(map<string,vector<SVGElement *>> identif){
+        //por concluir desalocar memoria
+    }
     void readSVG(const string& svg_file, Point& dimensions, vector<SVGElement *>& svg_elements)
     {
         XMLDocument doc;
@@ -76,6 +103,8 @@ namespace svg
         dimensions.x = xml_elem->IntAttribute("width");
         dimensions.y = xml_elem->IntAttribute("height");
         
-       recursive(xml_elem,svg_elements);
+        map<string,vector<SVGElement *>> identif;
+
+        recursive(xml_elem,svg_elements,identif);
 }
 }
