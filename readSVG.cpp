@@ -33,6 +33,27 @@ namespace svg
             }
         }
     }
+    
+    Point parseTranslate(const string &str) {
+        Point result;
+        string numbers = str.substr(str.find("(") + 1, str.find(")") - str.find("(") - 1);
+        istringstream iss(numbers);
+        string x_str, y_str;
+        getline(iss, x_str, ',');
+        getline(iss, y_str);
+        result.x = stoi(x_str);
+        result.y = stoi(y_str);
+        return result;
+    }
+
+    int parseScaleOrRotate(const string &str) {
+        int result;
+        string number = str.substr(str.find("(") + 1, str.find(")") - str.find("(") - 1);
+        istringstream iss(number);
+        iss >> result;
+        return result;
+    }
+
     void recursive(XMLElement *pParent,vector<SVGElement *>& svg_elements,map<string,vector<SVGElement*>>& identif){
         for (XMLElement *child = pParent->FirstChildElement(); child != nullptr; child = child->NextSiblingElement()) {
             vector<SVGElement *> figsofgrupos;
