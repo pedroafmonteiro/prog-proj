@@ -15,14 +15,9 @@ namespace svg
     Ellipse::Ellipse(const Color &fill,
                      const Point &center,
                      const Point &radius, 
-                     const std::string &id, 
-                     const std::string &transform, 
-                     const Point &transformOrigin)
+                     const std::string &id)
         : fill(fill), center(center), radius(radius)
     {
-        this->id = id;
-        this->transform = transform;
-        this->transformOrigin = transformOrigin;
     }
 
     /**
@@ -35,7 +30,7 @@ namespace svg
         img.draw_ellipse(center, radius, fill);
     }
     SVGElement* Ellipse::copy() const{
-        return new Ellipse(fill,center,radius,id,transform,transformOrigin);
+        return new Ellipse(fill,center,radius,id);
     }
     /**
      * @brief Draws a circle on the specified PNGImage.
@@ -47,7 +42,7 @@ namespace svg
         img.draw_ellipse(center, radius, fill);
     }
     SVGElement* Circle::copy() const{
-        return new Circle(fill,center,radius.x,id,transform,transformOrigin);
+        return new Circle(fill,center,radius.x,id);
     }
     /**
      * @brief Constructs a Polyline object with the given points and stroke color.
@@ -57,14 +52,9 @@ namespace svg
      */
     Polyline::Polyline(const std::vector<Point> &points,
                        const Color &stroke, 
-                       const std::string &id, 
-                       const std::string &transform, 
-                       const Point &transformOrigin)
+                       const std::string &id)
         : points(points), stroke(stroke)
     {
-        this->id = id;
-        this->transform = transform;
-        this->transformOrigin = transformOrigin;
     }
 
     /**
@@ -80,7 +70,7 @@ namespace svg
         }
     }
     SVGElement* Polyline::copy() const{
-        return new Polyline(points,stroke,id,transform,transformOrigin);
+        return new Polyline(points,stroke,id);
     }
     /**
      * @brief Draws a line on the given PNGImage.
@@ -92,7 +82,7 @@ namespace svg
         img.draw_line(start, end, stroke);
     }
     SVGElement* Line::copy() const{
-        return new Line(start,end,stroke,id,transform,transformOrigin);
+        return new Line(start,end,stroke,id);
     }
     /**
      * @brief Constructs a Polygon object with the given points and fill color.
@@ -102,14 +92,9 @@ namespace svg
      */
     Polygon::Polygon(const std::vector<Point> &points, 
                      const Color &fill, 
-                     const std::string &id, 
-                     const std::string &transform, 
-                     const Point &transformOrigin)
+                     const std::string &id)
         : points(points), fill(fill)
     {
-        this->id = id;
-        this->transform = transform;
-        this->transformOrigin = transformOrigin;
     }
 
     /**
@@ -122,7 +107,7 @@ namespace svg
         img.draw_polygon(points, fill);
     }
     SVGElement* Polygon::copy() const{
-        return new Polygon(points,fill,id,transform,transformOrigin);
+        return new Polygon(points,fill,id);
     }
     /**
      * @brief Draws a rectangle on the given PNGImage.
