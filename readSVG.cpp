@@ -108,8 +108,15 @@ namespace svg
             svg_elements.insert(svg_elements.end(),figsofgrupos.begin(),figsofgrupos.end());
         }
     }
-    void delmapa(map<string,vector<SVGElement *>> identif){
-        //por concluir desalocar memoria
+    void delmapa(map<string,vector<SVGElement *>>& identif) {
+    // Iterate through the map and delete each vector of SVGElement pointers
+    for (auto& entry : identif) {
+        for (SVGElement* element : entry.second) {
+            delete element; // Deallocate memory for each SVGElement
+        }
+        entry.second.clear(); // Clear the vector
+    }
+    identif.clear(); // Clear the entire map
     }
     void readSVG(const string& svg_file, Point& dimensions, vector<SVGElement *>& svg_elements)
     {
