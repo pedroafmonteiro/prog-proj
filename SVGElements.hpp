@@ -15,11 +15,11 @@ namespace svg
         SVGElement();
         virtual ~SVGElement();
         virtual void draw(PNGImage &img) const = 0;                     // Declaration of the draw virtual pure function for each SVG element.
-        virtual Point translate(const Point &t) const = 0;              // Declaration of the translate virtual pure function for each SVG element.
-        virtual Point rotate(const Point &origin, 
-                             int degrees) const = 0;                    // Declaration of the rotate virtual pure function for each SVG element.
-        virtual Point scale(const Point &origin, 
-                            int v) const = 0;                           // Declaration of the scale virtual pure function for each SVG element.
+        virtual void translate(const Point &t) = 0;                     // Declaration of the translate virtual pure function for each SVG element.
+        virtual void rotate(const Point &origin, 
+                             int degrees) = 0;                          // Declaration of the rotate virtual pure function for each SVG element.
+        virtual void scale(const Point &origin, 
+                            int v) = 0;                                 // Declaration of the scale virtual pure function for each SVG element.
         virtual SVGElement* copy() const = 0;                           // Declaration of the translate virtual pure function for each SVG element.
         std::string id;
     };
@@ -51,11 +51,11 @@ namespace svg
                 const std::string &id = "");  
 
         void draw(PNGImage &img) const override;                        // Declaration of the Ellipse's draw function.
-        Point translate(const Point &t) const override;                 // Declaration of the Ellipse's translate function.
-        Point rotate(const Point &origin, 
-                     int degrees) const override;                       // Declaration of the Ellipse's rotate function.
-        Point scale(const Point &origin, 
-                    int v) const override;                              // Declaration of the Ellipse's scale function.
+        void translate(const Point &t) override;                        // Declaration of the Ellipse's translate function.
+        void rotate(const Point &origin, 
+                     int degrees) override;                             // Declaration of the Ellipse's rotate function.
+        void scale(const Point &origin, 
+                    int v) override;                                    // Declaration of the Ellipse's scale function.
         SVGElement* copy() const override;                              // Declaration of the Ellipse's copy function.
 
     protected:
@@ -86,11 +86,11 @@ namespace svg
         : Ellipse(fill, center, {radius , radius}, id) { };
 
         void draw(PNGImage &img) const override;                        // Declaration of the Circle's draw function.
-        Point translate(const Point &t) const override;                 // Declaration of the Circle's translate function.
-        Point rotate(const Point &origin, 
-                     int degrees) const override;                       // Declaration of the Circle's rotate function.
-        Point scale(const Point &origin, 
-                    int v) const override;                              // Declaration of the Circle's scale function.
+        void translate(const Point &t) override;                        // Declaration of the Circle's translate function.
+        void rotate(const Point &origin, 
+                     int degrees) override;                             // Declaration of the Circle's rotate function.
+        void scale(const Point &origin, 
+                    int v) override;                                    // Declaration of the Circle's scale function.
         SVGElement* copy() const override;                              // Declaration of the Circle's copy function.
     };
 
@@ -113,11 +113,11 @@ namespace svg
                  const std::string &id = "");
 
         void draw(PNGImage &img) const override;                        // Declaration of the Polyline's draw function.
-        Point translate(const Point &t) const override;                 // Declaration of the Polyline's translate function.
-        Point rotate(const Point &origin, 
-                     int degrees) const override;                       // Declaration of the Polyline's rotate function.
-        Point scale(const Point &origin, 
-                    int v) const override;                              // Declaration of the Polyline's scale function.
+        void translate(const Point &t) override;                        // Declaration of the Polyline's translate function.
+        void rotate(const Point &origin, 
+                     int degrees) override;                             // Declaration of the Polyline's rotate function.
+        void scale(const Point &origin, 
+                    int v) override;                                    // Declaration of the Polyline's scale function.
         SVGElement* copy() const override;                              // Declaration of the Polyline's copy function.
 
     protected:
@@ -147,11 +147,11 @@ namespace svg
         : Polyline({start, end}, stroke, id), start(start), end(end) { };
 
         void draw(PNGImage &img) const override;                        // Declaration of the Line's draw function.
-        Point translate(const Point &t) const override;                 // Declaration of the Line's translate function.
-        Point rotate(const Point &origin, 
-                     int degrees) const override;                       // Declaration of the Line's rotate function.
-        Point scale(const Point &origin, 
-                    int v) const override;                              // Declaration of the Line's scale function.
+        void translate(const Point &t) override;                        // Declaration of the Line's translate function.
+        void rotate(const Point &origin, 
+                     int degrees) override;                             // Declaration of the Line's rotate function.
+        void scale(const Point &origin, 
+                    int v) override;                                    // Declaration of the Line's scale function.
         SVGElement* copy() const override;                              // Declaration of the Line's copy function.
 
     private:
@@ -178,11 +178,11 @@ namespace svg
                 const std::string &id = "");
 
         void draw(PNGImage &img) const override;                        // Declaration of the Polygon's draw function.
-        Point translate(const Point &t) const override;                 // Declaration of the Polygon's translate function.
-        Point rotate(const Point &origin, 
-                     int degrees) const override;                       // Declaration of the Polygon's rotate function.
-        Point scale(const Point &origin, 
-                    int v) const override;                              // Declaration of the Polygon's scale function.
+        void translate(const Point &t) override;                        // Declaration of the Polygon's translate function.
+        void rotate(const Point &origin, 
+                     int degrees) override;                             // Declaration of the Polygon's rotate function.
+        void scale(const Point &origin, 
+                    int v) override;                                    // Declaration of the Polygon's scale function.
         SVGElement* copy() const override;                              // Declaration of the Polygon's copy function.
 
     protected:
@@ -210,18 +210,21 @@ namespace svg
              const int &height, 
              const Color &fill, 
              const std::string &id = "") 
-        : Polygon({Point(corner), Point({corner.x + width-1, corner.y}), Point({corner.x + width-1, corner.y + height-1}), Point({corner.x, corner.y + height-1})}, fill, id), corner(corner), width(width), height(height) { };
+        : Polygon({corner, corner2, corner3, corner4}, fill, id), corner1(corner), width(width), height(height) { };
 
         void draw(PNGImage &img) const override;                        // Declaration of the Rectangle's draw function.
-        Point translate(const Point &t) const override;                 // Declaration of the Rectangle's translate function.
-        Point rotate(const Point &origin, 
-                     int degrees) const override;                       // Declaration of the Rectangle's rotate function.
-        Point scale(const Point &origin, 
-                    int v) const override;                              // Declaration of the Rectangle's scale function.
+        void translate(const Point &t) override;                        // Declaration of the Rectangle's translate function.
+        void rotate(const Point &origin, 
+                     int degrees) override;                             // Declaration of the Rectangle's rotate function.
+        void scale(const Point &origin, 
+                    int v) override;                                    // Declaration of the Rectangle's scale function.
         SVGElement* copy() const override;                              // Declaration of the Rectangle's copy function.
 
     private:
-        Point corner;   // The top-left corner of the rectangle.
+        Point corner1;   // The top-left corner of the rectangle.
+        Point corner2 = {corner1.x + width-1, corner1.y};
+        Point corner3 = {corner1.x + width-1, corner1.y + height-1};
+        Point corner4 = {corner1.x, corner1.y + height-1};
         int width;      // The width of the rectangle.
         int height;     // The height of the rectangle.
     };

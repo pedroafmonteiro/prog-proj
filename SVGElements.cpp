@@ -30,6 +30,21 @@ namespace svg
         img.draw_ellipse(center, radius, fill);
     }
 
+    void Ellipse::translate(const Point &t)
+    {
+        center = center.translate(t);
+    }
+
+    void Ellipse::rotate(const Point &origin, int degrees)
+    {
+
+    }
+
+    void Ellipse::scale(const Point &origin, int v)
+    {
+
+    }
+
     /**
      * @brief Creates a copy of the Ellipse object.
      * 
@@ -47,6 +62,19 @@ namespace svg
     void Circle::draw(PNGImage &img) const
     {
         img.draw_ellipse(center, radius, fill);
+    }
+
+    void Circle::translate(const Point &t)
+    {
+        center = center.translate(t);
+    }
+
+    void Circle::rotate(const Point &origin, int degrees)
+    {
+    }
+
+    void Circle::scale(const Point &origin, int v)
+    {
     }
 
     /**
@@ -83,6 +111,21 @@ namespace svg
         }
     }
 
+    void Polyline::translate(const Point &t)
+    {
+        for (size_t i = 0; i < points.size(); i++) {
+            points[i] = points[i].translate(t);
+        }
+    }
+
+    void Polyline::rotate(const Point &origin, int degrees)
+    {
+    }
+
+    void Polyline::scale(const Point &origin, int v)
+    {
+    }
+
     /**
      * @brief Creates a copy of the Polyline object.
      * 
@@ -100,6 +143,20 @@ namespace svg
     void Line::draw(PNGImage &img) const
     {
         img.draw_line(start, end, stroke);
+    }
+
+    void Line::translate(const Point &t)
+    {
+        start = start.translate(t);
+        end = end.translate(t);
+    }
+
+    void Line::rotate(const Point &origin, int degrees)
+    {
+    }
+
+    void Line::scale(const Point &origin, int v)
+    {
     }
 
     /**
@@ -134,6 +191,22 @@ namespace svg
         img.draw_polygon(points, fill);
     }
 
+    void Polygon::translate(const Point &t)
+    {
+        for (size_t i = 0; i < points.size(); i++)
+        {
+            points[i] = points[i].translate(t);
+        }
+    }
+
+    void Polygon::rotate(const Point &origin, int degrees)
+    {
+    }
+
+    void Polygon::scale(const Point &origin, int v)
+    {
+    }
+
     /**
      * @brief Creates a copy of the Polygon object.
      * 
@@ -153,12 +226,28 @@ namespace svg
         img.draw_polygon(points, fill);
     }
 
+    void Rect::translate(const Point &t)
+    {
+        corner1 = corner1.translate(t);
+        corner2 = corner2.translate(t);
+        corner3 = corner3.translate(t);
+        corner4 = corner4.translate(t);
+    }
+
+    void Rect::rotate(const Point &origin, int degrees)
+    {
+    }
+
+    void Rect::scale(const Point &origin, int v)
+    {
+    }
+
     /**
      * @brief Creates a copy of the Rectangle object.
      * 
      * @return A pointer to the copied Rectangle object.
      */
     SVGElement* Rect::copy() const {
-        return new Rect(corner, width, height, fill, id);
+        return new Rect(corner1, width, height, fill, id);
     }
 }
