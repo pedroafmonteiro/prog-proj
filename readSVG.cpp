@@ -127,5 +127,5 @@ namespace svg
         map<string,vector<SVGElement *>> identif;
 
         recursive(xml_elem,svg_elements,identif);
-}
+    }
 }

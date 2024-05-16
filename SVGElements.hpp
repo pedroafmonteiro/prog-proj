@@ -14,20 +14,21 @@ namespace svg
     public:
         SVGElement();
         virtual ~SVGElement();
-        virtual void draw(PNGImage &img) const = 0;
-        virtual SVGElement* copy() const=0; // Criar novo elem/pointer para alteracao
+        virtual void draw(PNGImage &img) const = 0;                     // Declaration of the draw virtual pure function for each SVG element.
+        virtual Point translate(const Point &t) const = 0;              // Declaration of the translate virtual pure function for each SVG element.
+        virtual Point rotate(const Point &origin, 
+                             int degrees) const = 0;                    // Declaration of the rotate virtual pure function for each SVG element.
+        virtual Point scale(const Point &origin, 
+                            int v) const = 0;                           // Declaration of the scale virtual pure function for each SVG element.
+        virtual SVGElement* copy() const = 0;                           // Declaration of the translate virtual pure function for each SVG element.
         std::string id;
     };
 
-    // Declaration of namespace functions
-    // readSVG -> implement it in readSVG.cpp
-    // convert -> already given (DO NOT CHANGE) in convert.cpp
-
     void readSVG(const std::string &svg_file,
                  Point &dimensions,
-                 std::vector<SVGElement *> &svg_elements);
+                 std::vector<SVGElement *> &svg_elements);              // Declaration of namespace function readSVG.
     void convert(const std::string &svg_file,
-                 const std::string &png_file);
+                 const std::string &png_file);                          // Declaration of namespace function convert.
 
     /**
      * @class Ellipse
@@ -49,23 +50,23 @@ namespace svg
                 const Point &radius, 
                 const std::string &id = "");  
 
-        /**
-         * @brief Draws the ellipse on the specified PNGImage.
-         * 
-         * @param img The PNGImage to draw the ellipse on.
-         */
-        void draw(PNGImage &img) const override;
-        SVGElement* copy() const override;
+        void draw(PNGImage &img) const override;                        // Declaration of the Ellipse's draw function.
+        Point translate(const Point &t) const override;                 // Declaration of the Ellipse's translate function.
+        Point rotate(const Point &origin, 
+                     int degrees) const override;                       // Declaration of the Ellipse's rotate function.
+        Point scale(const Point &origin, 
+                    int v) const override;                              // Declaration of the Ellipse's scale function.
+        SVGElement* copy() const override;                              // Declaration of the Ellipse's copy function.
 
     protected:
-        Color fill;     ///< The fill color of the ellipse.
-        Point center;   ///< The center point of the ellipse.
-        Point radius;   ///< The radius of the ellipse.
+        Color fill;     // The fill color of the ellipse.
+        Point center;   // The center point of the ellipse.
+        Point radius;   // The radius of the ellipse.
     };
 
     /**
      * @class Circle
-     * @brief Represents a circle shape.
+     * @brief Represents a circle SVG element.
      */
     class Circle : public Ellipse
     {
@@ -78,19 +79,19 @@ namespace svg
          * @param radius The radius of the circle.
          * @param id The id of the circle.
          */
-         Circle(const Color &fill, 
-             const Point &center, 
-             const int &radius, 
-             const std::string &id = "") 
-         : Ellipse(fill, center, {radius , radius}, id) { };
+        Circle(const Color &fill, 
+            const Point &center, 
+            const int &radius, 
+            const std::string &id = "") 
+        : Ellipse(fill, center, {radius , radius}, id) { };
 
-         /**
-          * @brief Draws the circle on the specified PNG image.
-          * 
-          * @param img The PNG image to draw the circle on.
-          */
-         void draw(PNGImage &img) const override;
-         SVGElement* copy() const override;
+        void draw(PNGImage &img) const override;                        // Declaration of the Circle's draw function.
+        Point translate(const Point &t) const override;                 // Declaration of the Circle's translate function.
+        Point rotate(const Point &origin, 
+                     int degrees) const override;                       // Declaration of the Circle's rotate function.
+        Point scale(const Point &origin, 
+                    int v) const override;                              // Declaration of the Circle's scale function.
+        SVGElement* copy() const override;                              // Declaration of the Circle's copy function.
     };
 
     /**
@@ -111,22 +112,22 @@ namespace svg
                  const Color &stroke, 
                  const std::string &id = "");
 
-        /**
-         * @brief Draws the polyline on the given PNGImage.
-         * 
-         * @param img The PNGImage to draw the polyline on.
-         */
-        void draw(PNGImage &img) const override;
-        SVGElement* copy() const override;
+        void draw(PNGImage &img) const override;                        // Declaration of the Polyline's draw function.
+        Point translate(const Point &t) const override;                 // Declaration of the Polyline's translate function.
+        Point rotate(const Point &origin, 
+                     int degrees) const override;                       // Declaration of the Polyline's rotate function.
+        Point scale(const Point &origin, 
+                    int v) const override;                              // Declaration of the Polyline's scale function.
+        SVGElement* copy() const override;                              // Declaration of the Polyline's copy function.
 
     protected:
-        std::vector<Point> points; ///< The vector of points that define the polyline.
-        Color stroke;              ///< The color of the polyline stroke.
+        std::vector<Point> points; // The vector of points that define the polyline.
+        Color stroke;              // The color of the polyline stroke.
     };
 
     /**
      * @class Line
-     * @brief Represents a line element in an SVG image.
+     * @brief Represents a line SVG element.
      */
     class Line : public Polyline
     {
@@ -145,17 +146,17 @@ namespace svg
              const std::string &id = "") 
         : Polyline({start, end}, stroke, id), start(start), end(end) { };
 
-        /**
-         * @brief Draws the line on the specified PNG image.
-         * 
-         * @param img The PNG image to draw the line on.
-         */
-        void draw(PNGImage &img) const override;
-        SVGElement* copy() const override;
+        void draw(PNGImage &img) const override;                        // Declaration of the Line's draw function.
+        Point translate(const Point &t) const override;                 // Declaration of the Line's translate function.
+        Point rotate(const Point &origin, 
+                     int degrees) const override;                       // Declaration of the Line's rotate function.
+        Point scale(const Point &origin, 
+                    int v) const override;                              // Declaration of the Line's scale function.
+        SVGElement* copy() const override;                              // Declaration of the Line's copy function.
 
     private:
-        Point start;    ///< The starting point of the line.
-        Point end;      ///< The ending point of the line.
+        Point start;    // The starting point of the line.
+        Point end;      // The ending point of the line.
     };
 
     /**
@@ -176,22 +177,22 @@ namespace svg
                 const Color &fill, 
                 const std::string &id = "");
 
-        /**
-         * @brief Draws the polygon on the given `PNGImage`.
-         * 
-         * @param img The `PNGImage` on which the polygon will be drawn.
-         */
-        void draw(PNGImage &img) const override;
-        SVGElement* copy() const override;
+        void draw(PNGImage &img) const override;                        // Declaration of the Polygon's draw function.
+        Point translate(const Point &t) const override;                 // Declaration of the Polygon's translate function.
+        Point rotate(const Point &origin, 
+                     int degrees) const override;                       // Declaration of the Polygon's rotate function.
+        Point scale(const Point &origin, 
+                    int v) const override;                              // Declaration of the Polygon's scale function.
+        SVGElement* copy() const override;                              // Declaration of the Polygon's copy function.
 
     protected:
-        std::vector<Point> points; ///< The vector of points that define the vertices of the polygon.
-        Color fill;                ///< The fill color of the polygon.
+        std::vector<Point> points; // The vector of points that define the vertices of the polygon.
+        Color fill;                // The fill color of the polygon.
     };
 
     /**
      * @class Rect
-     * @brief Represents a rectangle shape.
+     * @brief Represents a rectangle SVG element.
      */
     class Rect : public Polygon
     {
@@ -211,17 +212,18 @@ namespace svg
              const std::string &id = "") 
         : Polygon({Point(corner), Point({corner.x + width-1, corner.y}), Point({corner.x + width-1, corner.y + height-1}), Point({corner.x, corner.y + height-1})}, fill, id), corner(corner), width(width), height(height) { };
 
-        /**
-         * @brief Draws the rectangle on the specified image.
-         * 
-         * @param img The image on which to draw the rectangle.
-         */
-        void draw(PNGImage &img) const override;
+        void draw(PNGImage &img) const override;                        // Declaration of the Rectangle's draw function.
+        Point translate(const Point &t) const override;                 // Declaration of the Rectangle's translate function.
+        Point rotate(const Point &origin, 
+                     int degrees) const override;                       // Declaration of the Rectangle's rotate function.
+        Point scale(const Point &origin, 
+                    int v) const override;                              // Declaration of the Rectangle's scale function.
+        SVGElement* copy() const override;                              // Declaration of the Rectangle's copy function.
 
     private:
-        Point corner;   ///< The top-left corner of the rectangle.
-        int width;      ///< The width of the rectangle.
-        int height;     ///< The height of the rectangle.
+        Point corner;   // The top-left corner of the rectangle.
+        int width;      // The width of the rectangle.
+        int height;     // The height of the rectangle.
     };
 }
 #endif

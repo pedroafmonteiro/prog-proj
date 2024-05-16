@@ -29,9 +29,16 @@ namespace svg
     {
         img.draw_ellipse(center, radius, fill);
     }
+
+    /**
+     * @brief Creates a copy of the Ellipse object.
+     * 
+     * @return A pointer to the copied Ellipse object.
+     */
     SVGElement* Ellipse::copy() const{
         return new Ellipse(fill,center,radius,id);
     }
+
     /**
      * @brief Draws a circle on the specified PNGImage.
      *
@@ -41,11 +48,17 @@ namespace svg
     {
         img.draw_ellipse(center, radius, fill);
     }
+
+    /**
+     * @brief Creates a copy of the Circle object.
+     * 
+     * @return A pointer to the copied Circle object.
+     */
     SVGElement* Circle::copy() const{
         return new Circle(fill,center,radius.x,id);
     }
     /**
-     * @brief Constructs a Polyline object with the given points and stroke color.
+     * @brief Constructs a Polyline object with the specified points and stroke color.
      * 
      * @param points The vector of points that define the polyline.
      * @param stroke The color of the polyline's stroke.
@@ -69,9 +82,16 @@ namespace svg
             img.draw_line(points[i], points[i + 1], stroke);
         }
     }
+
+    /**
+     * @brief Creates a copy of the Polyline object.
+     * 
+     * @return A pointer to the copied Polyline object.
+     */
     SVGElement* Polyline::copy() const{
         return new Polyline(points,stroke,id);
     }
+
     /**
      * @brief Draws a line on the given PNGImage.
      *
@@ -81,11 +101,18 @@ namespace svg
     {
         img.draw_line(start, end, stroke);
     }
+
+    /**
+     * @brief Creates a copy of the Line object.
+     * 
+     * @return A pointer to the copied Line object.
+     */
     SVGElement* Line::copy() const{
         return new Line(start,end,stroke,id);
     }
+
     /**
-     * @brief Constructs a Polygon object with the given points and fill color.
+     * @brief Constructs a Polygon object with the specified points and fill color.
      * 
      * @param points The vector of points that define the polygon.
      * @param fill The fill color of the polygon.
@@ -106,9 +133,16 @@ namespace svg
     {
         img.draw_polygon(points, fill);
     }
+
+    /**
+     * @brief Creates a copy of the Polygon object.
+     * 
+     * @return A pointer to the copied Ellipse object.
+     */
     SVGElement* Polygon::copy() const{
         return new Polygon(points,fill,id);
     }
+
     /**
      * @brief Draws a rectangle on the given PNGImage.
      *
@@ -119,4 +153,12 @@ namespace svg
         img.draw_polygon(points, fill);
     }
 
+    /**
+     * @brief Creates a copy of the Rectangle object.
+     * 
+     * @return A pointer to the copied Rectangle object.
+     */
+    SVGElement* Rect::copy() const {
+        return new Rect(corner, width, height, fill, id);
+    }
 }
