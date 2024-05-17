@@ -77,7 +77,14 @@ namespace svg
         }
         void onTestCompletion(bool success)
         {
-            cout << (success ? "pass" : "fail") << std::endl;
+            if (success)
+            {
+                cout << "\033[32m" << "pass" << "\033[0m" << std::endl;
+            }
+            else
+            {
+                cout << "\033[31m" << "fail" << "\033[0m" << std::endl;
+            }
             if (success)
             {
                 passed_tests++;

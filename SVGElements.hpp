@@ -86,11 +86,11 @@ namespace svg
         : Ellipse(fill, center, {radius , radius}, id) { };
 
         void draw(PNGImage &img) const override;                        // Declaration of the Circle's draw function.
-        void translate(const Point &t) override;                        // Declaration of the Circle's translate function.
+        /* void translate(const Point &t) override;                        // Declaration of the Circle's translate function.
         void rotate(const Point &origin, 
                      int degrees) override;                             // Declaration of the Circle's rotate function.
         void scale(const Point &origin, 
-                    int v) override;                                    // Declaration of the Circle's scale function.
+                    int v) override;                                    // Declaration of the Circle's scale function. */
         SVGElement* copy() const override;                              // Declaration of the Circle's copy function.
     };
 
@@ -205,28 +205,18 @@ namespace svg
          * @param height The height of the rectangle.
          * @param fill The fill color of the rectangle.
          */
-        Rect(const Point &corner, 
-             const int &width, 
-             const int &height, 
+        Rect(const std::vector<Point> &points, 
              const Color &fill, 
              const std::string &id = "") 
-        : Polygon({corner, corner2, corner3, corner4}, fill, id), corner1(corner), width(width), height(height) { };
+        : Polygon(points, fill, id) { };
 
         void draw(PNGImage &img) const override;                        // Declaration of the Rectangle's draw function.
-        void translate(const Point &t) override;                        // Declaration of the Rectangle's translate function.
+        /* void translate(const Point &t) override;                        // Declaration of the Rectangle's translate function.
         void rotate(const Point &origin, 
                      int degrees) override;                             // Declaration of the Rectangle's rotate function.
         void scale(const Point &origin, 
-                    int v) override;                                    // Declaration of the Rectangle's scale function.
+                    int v) override;                                    // Declaration of the Rectangle's scale function. */
         SVGElement* copy() const override;                              // Declaration of the Rectangle's copy function.
-
-    private:
-        Point corner1;   // The top-left corner of the rectangle.
-        Point corner2 = {corner1.x + width-1, corner1.y};
-        Point corner3 = {corner1.x + width-1, corner1.y + height-1};
-        Point corner4 = {corner1.x, corner1.y + height-1};
-        int width;      // The width of the rectangle.
-        int height;     // The height of the rectangle.
     };
 }
 #endif
