@@ -30,7 +30,13 @@ namespace svg
         }
         identif[ident] = temp;
     }
-    void transformdot(string &prestring)
+
+    /**
+     * @brief Transforms all the commas in a string to spaces.
+     *
+     * @param prestring The string containing commas.
+     */
+    void transformcomma(string &prestring)
     {
         for (char &c : prestring)
         {
@@ -42,16 +48,16 @@ namespace svg
     }
 
     /**
-     * @brief Parses a translation string and returns a Point object representing the translation.
+     * @brief Parses a translate string and returns a Point object representing the translation.
      *
-     * @param str The translation string in the format "translate(x, y)" or "translate(x y)".
-     * @return A Point object representing the translation, with x and y coordinates.
+     * @param str The translate string in the format "translate(x, y)" or "translate(x y)".
+     * @return A Point struct representing the translation, with x and y coordinates.
      */
     Point parseTranslate(const string &str)
     {
         Point result;
         string numbers = str.substr(str.find("(") + 1, str.find(")") - str.find("(") - 1);
-        transformdot(numbers);
+        transformcomma(numbers);
         istringstream iss(numbers);
         string x_str, y_str;
         getline(iss, x_str, ' ');
@@ -61,6 +67,12 @@ namespace svg
         return result;
     }
 
+    /**
+     * @brief Parses a scale or rotate string and returns a Point object representing respectivily.
+     *
+     * @param str The string in the format "scale(x)" or "rotate(x)".
+     * @return An integer representing the scaling or rotation.
+     */
     int parseScaleOrRotate(const string &str)
     {
         int result;
@@ -70,12 +82,64 @@ namespace svg
         return result;
     }
 
+    /**
+     * @brief Parses a point string and returns it in a point struct.
+     *
+     * @param str The translation string in the format "x y".
+     * @return A Point struct with x and y coordinates.
+     */
     Point parsePoint(const string &str)
     {
         Point result;
         istringstream iss(str);
         iss >> result.x >> result.y;
         return result;
+    }
+
+    /**
+     * @brief Parses the corresponding transformation and applies it to the SVG element.
+     *
+     * @param element The SVG element to apply the transformation.
+     * @param transformAttribute The type of transformation.
+     * @param transformOrigin The origin point of the transformation.
+     * @return A Point object representing the translation, with x and y coordinates.
+     */
+    void parseTransform(SVGElement *element, const char *transformAttribute, const char *transformOrigin)
+    {
+        if (transformAttribute && strstr(transformAttribute, "translate") != nullptr)
+        {
+            string transform_str(transformAttribute);
+            Point translate = parseTranslate(transform_str);
+            element->translate(translate);
+        }
+        else if (transformAttribute && strstr(transformAttribute, "scale") != nullptr)
+        {
+            string transform_str(transformAttribute);
+            int scale = parseScaleOrRotate(transform_str);
+            if (transformOrigin)
+            {
+                Point transformOriginPoint = parsePoint(transformOrigin);
+                element->scale(transformOriginPoint, scale);
+            }
+            else
+            {
+                element->scale({0, 0}, scale);
+            }
+        }
+        else if (transformAttribute && strstr(transformAttribute, "rotate") != nullptr)
+        {
+            string transform_str(transformAttribute);
+            int rotate = parseScaleOrRotate(transform_str);
+            if (transformOrigin)
+            {
+                Point transformOriginPoint = parsePoint(transformOrigin);
+                element->rotate(transformOriginPoint, rotate);
+            }
+            else
+            {
+                element->rotate({0, 0}, rotate);
+            }
+        }
     }
 
     void recursive(XMLElement *pParent, vector<SVGElement *> &svg_elements, map<string, vector<SVGElement *>> &identif)
@@ -88,40 +152,7 @@ namespace svg
                 Ellipse *ellipse_object = new Ellipse(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, {child->IntAttribute("rx"), child->IntAttribute("ry")});
                 const char *transform_attr = child->Attribute("transform");
                 const char *transform_origin = child->Attribute("transform-origin");
-                if (transform_attr && strstr(transform_attr, "translate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    Point translate = parseTranslate(transform_str);
-                    ellipse_object->translate(translate);
-                }
-                else if (transform_attr && strstr(transform_attr, "scale") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int scale = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        ellipse_object->scale(transformOrigin, scale);
-                    }
-                    else
-                    {
-                        ellipse_object->scale({0, 0}, scale);
-                    }
-                }
-                else if (transform_attr && strstr(transform_attr, "rotate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int rotate = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        ellipse_object->rotate(transformOrigin, rotate);
-                    }
-                    else
-                    {
-                        ellipse_object->rotate({0, 0}, rotate);
-                    }
-                }
+                parseTransform(ellipse_object, transform_attr, transform_origin);
                 figsofgrupos.push_back(ellipse_object);
             }
             else if (strcmp(child->Name(), "circle") == 0)
@@ -129,46 +160,13 @@ namespace svg
                 Circle *circle_object = new Circle(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, child->IntAttribute("r"));
                 const char *transform_attr = child->Attribute("transform");
                 const char *transform_origin = child->Attribute("transform-origin");
-                if (transform_attr && strstr(transform_attr, "translate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    Point translate = parseTranslate(transform_str);
-                    circle_object->translate(translate);
-                }
-                else if (transform_attr && strstr(transform_attr, "scale") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int scale = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        circle_object->scale(transformOrigin, scale);
-                    }
-                    else
-                    {
-                        circle_object->scale({0, 0}, scale);
-                    }
-                }
-                else if (transform_attr && strstr(transform_attr, "rotate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int rotate = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        circle_object->rotate(transformOrigin, rotate);
-                    }
-                    else
-                    {
-                        circle_object->rotate({0, 0}, rotate);
-                    }
-                }
+                parseTransform(circle_object, transform_attr, transform_origin);
                 figsofgrupos.push_back(circle_object);
             }
             else if (strcmp(child->Name(), "polyline") == 0)
             {
                 string pontos = child->Attribute("points");
-                transformdot(pontos);
+                transformcomma(pontos);
                 istringstream iss(pontos);
                 vector<Point> polypontos;
                 Point temp;
@@ -180,40 +178,7 @@ namespace svg
                 Polyline *polyline_object = new Polyline(polypontos, parse_color(child->Attribute("stroke")));
                 const char *transform_attr = child->Attribute("transform");
                 const char *transform_origin = child->Attribute("transform-origin");
-                if (transform_attr && strstr(transform_attr, "translate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    Point translate = parseTranslate(transform_str);
-                    polyline_object->translate(translate);
-                }
-                else if (transform_attr && strstr(transform_attr, "scale") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int scale = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        polyline_object->scale(transformOrigin, scale);
-                    }
-                    else
-                    {
-                        polyline_object->scale({0, 0}, scale);
-                    }
-                }
-                else if (transform_attr && strstr(transform_attr, "rotate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int rotate = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        polyline_object->rotate(transformOrigin, rotate);
-                    }
-                    else
-                    {
-                        polyline_object->rotate({0, 0}, rotate);
-                    }
-                }
+                parseTransform(polyline_object, transform_attr, transform_origin);
                 figsofgrupos.push_back(polyline_object);
             }
             else if (strcmp(child->Name(), "line") == 0)
@@ -221,46 +186,13 @@ namespace svg
                 Line *line_object = new Line({child->IntAttribute("x1"), child->IntAttribute("y1")}, {child->IntAttribute("x2"), child->IntAttribute("y2")}, parse_color(child->Attribute("stroke")));
                 const char *transform_attr = child->Attribute("transform");
                 const char *transform_origin = child->Attribute("transform-origin");
-                if (transform_attr && strstr(transform_attr, "translate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    Point translate = parseTranslate(transform_str);
-                    line_object->translate(translate);
-                }
-                else if (transform_attr && strstr(transform_attr, "scale") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int scale = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        line_object->scale(transformOrigin, scale);
-                    }
-                    else
-                    {
-                        line_object->scale({0, 0}, scale);
-                    }
-                }
-                else if (transform_attr && strstr(transform_attr, "rotate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int rotate = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        line_object->rotate(transformOrigin, rotate);
-                    }
-                    else
-                    {
-                        line_object->rotate({0, 0}, rotate);
-                    }
-                }
+                parseTransform(line_object, transform_attr, transform_origin);
                 figsofgrupos.push_back(line_object);
             }
             else if (strcmp(child->Name(), "polygon") == 0)
             {
                 string pontos = child->Attribute("points");
-                transformdot(pontos);
+                transformcomma(pontos);
                 istringstream iss(pontos);
                 vector<Point> polypontos;
                 Point temp;
@@ -272,40 +204,7 @@ namespace svg
                 Polygon *polygon_object = new Polygon(polypontos, parse_color(child->Attribute("fill")));
                 const char *transform_attr = child->Attribute("transform");
                 const char *transform_origin = child->Attribute("transform-origin");
-                if (transform_attr && strstr(transform_attr, "translate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    Point translate = parseTranslate(transform_str);
-                    polygon_object->translate(translate);
-                }
-                else if (transform_attr && strstr(transform_attr, "scale") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int scale = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        polygon_object->scale(transformOrigin, scale);
-                    }
-                    else
-                    {
-                        polygon_object->scale({0, 0}, scale);
-                    }
-                }
-                else if (transform_attr && strstr(transform_attr, "rotate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int rotate = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        polygon_object->rotate(transformOrigin, rotate);
-                    }
-                    else
-                    {
-                        polygon_object->rotate({0, 0}, rotate);
-                    }
-                }
+                parseTransform(polygon_object, transform_attr, transform_origin);
                 figsofgrupos.push_back(polygon_object);
             }
             else if (strcmp(child->Name(), "rect") == 0)
@@ -335,40 +234,7 @@ namespace svg
                 Rect *rect_object = new Rect(points, parse_color(child->Attribute("fill")));
                 const char *transform_attr = child->Attribute("transform");
                 const char *transform_origin = child->Attribute("transform-origin");
-                if (transform_attr && strstr(transform_attr, "translate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    Point translate = parseTranslate(transform_str);
-                    rect_object->translate(translate);
-                }
-                else if (transform_attr && strstr(transform_attr, "scale") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int scale = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        rect_object->scale(transformOrigin, scale);
-                    }
-                    else
-                    {
-                        rect_object->scale({0, 0}, scale);
-                    }
-                }
-                else if (transform_attr && strstr(transform_attr, "rotate") != nullptr)
-                {
-                    string transform_str(transform_attr);
-                    int rotate = parseScaleOrRotate(transform_str);
-                    if (transform_origin)
-                    {
-                        Point transformOrigin = parsePoint(transform_origin);
-                        rect_object->rotate(transformOrigin, rotate);
-                    }
-                    else
-                    {
-                        rect_object->rotate({0, 0}, rotate);
-                    }
-                }
+                parseTransform(rect_object, transform_attr, transform_origin);
                 figsofgrupos.push_back(rect_object);
             }
             else if (strcmp(child->Name(), "g") == 0)
@@ -389,6 +255,7 @@ namespace svg
             svg_elements.insert(svg_elements.end(), figsofgrupos.begin(), figsofgrupos.end());
         }
     }
+    
     void delmapa(map<string, vector<SVGElement *>> &identif)
     {
         // Iterate through the map and delete each vector of SVGElement pointers
@@ -402,6 +269,7 @@ namespace svg
         }
         identif.clear(); // Clear the entire map
     }
+
     void readSVG(const string &svg_file, Point &dimensions, vector<SVGElement *> &svg_elements)
     {
         XMLDocument doc;

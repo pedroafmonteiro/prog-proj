@@ -33,3 +33,10 @@
 
 # Visual Studio Code
 .vscode/
+
+# Project related files
+output/*
+svgtopng
+test
+test_log.txt
+xmldump
