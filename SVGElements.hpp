@@ -208,5 +208,21 @@ namespace svg
         void draw(PNGImage &img) const override;                        // Declaration of the Rectangle's draw function.
         SVGElement* copy() const override;                              // Declaration of the Rectangle's copy function.
     };
+
+    class Group:public SVGElement
+    {
+    public:
+    Group(const std::vector<SVGElement*> &VectorFigs) : V(VectorFigs) {}
+    void draw(PNGImage &img) const override;
+    void translate(const Point &t) override;                        
+    void rotate(const Point &origin, 
+            int degrees) override;                             
+    void scale(const Point &origin, 
+            int v) override;
+    ~Group();
+    SVGElement* copy() const override;
+    private:
+        std::vector<SVGElement*> V;                    
+    };
 }
 #endif

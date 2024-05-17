@@ -142,26 +142,21 @@ namespace svg
         }
     }
 
-    void recursive(XMLElement *pParent, vector<SVGElement *> &svg_elements, map<string, vector<SVGElement *>> &identif)
+    SVGElement* recursive(XMLElement *pParent)
     {
+        vector<SVGElement *> figsofgrupos;
         for (XMLElement *child = pParent->FirstChildElement(); child != nullptr; child = child->NextSiblingElement())
         {
-            vector<SVGElement *> figsofgrupos;
+            SVGElement * p;
             if (strcmp(child->Name(), "ellipse") == 0)
             {
-                Ellipse *ellipse_object = new Ellipse(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, {child->IntAttribute("rx"), child->IntAttribute("ry")});
-                const char *transform_attr = child->Attribute("transform");
-                const char *transform_origin = child->Attribute("transform-origin");
-                parseTransform(ellipse_object, transform_attr, transform_origin);
-                figsofgrupos.push_back(ellipse_object);
+                p = new Ellipse(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, {child->IntAttribute("rx"), child->IntAttribute("ry")});
+       
             }
             else if (strcmp(child->Name(), "circle") == 0)
             {
-                Circle *circle_object = new Circle(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, child->IntAttribute("r"));
-                const char *transform_attr = child->Attribute("transform");
-                const char *transform_origin = child->Attribute("transform-origin");
-                parseTransform(circle_object, transform_attr, transform_origin);
-                figsofgrupos.push_back(circle_object);
+                p = new Circle(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, child->IntAttribute("r"));
+    
             }
             else if (strcmp(child->Name(), "polyline") == 0)
             {
@@ -175,19 +170,13 @@ namespace svg
                     iss >> temp.y;
                     polypontos.push_back(temp);
                 }
-                Polyline *polyline_object = new Polyline(polypontos, parse_color(child->Attribute("stroke")));
-                const char *transform_attr = child->Attribute("transform");
-                const char *transform_origin = child->Attribute("transform-origin");
-                parseTransform(polyline_object, transform_attr, transform_origin);
-                figsofgrupos.push_back(polyline_object);
+                p = new Polyline(polypontos, parse_color(child->Attribute("stroke")));
+          
             }
             else if (strcmp(child->Name(), "line") == 0)
             {
-                Line *line_object = new Line({child->IntAttribute("x1"), child->IntAttribute("y1")}, {child->IntAttribute("x2"), child->IntAttribute("y2")}, parse_color(child->Attribute("stroke")));
-                const char *transform_attr = child->Attribute("transform");
-                const char *transform_origin = child->Attribute("transform-origin");
-                parseTransform(line_object, transform_attr, transform_origin);
-                figsofgrupos.push_back(line_object);
+               p = new Line({child->IntAttribute("x1"), child->IntAttribute("y1")}, {child->IntAttribute("x2"), child->IntAttribute("y2")}, parse_color(child->Attribute("stroke")));
+            
             }
             else if (strcmp(child->Name(), "polygon") == 0)
             {
@@ -201,11 +190,8 @@ namespace svg
                     iss >> temp.y;
                     polypontos.push_back(temp);
                 }
-                Polygon *polygon_object = new Polygon(polypontos, parse_color(child->Attribute("fill")));
-                const char *transform_attr = child->Attribute("transform");
-                const char *transform_origin = child->Attribute("transform-origin");
-                parseTransform(polygon_object, transform_attr, transform_origin);
-                figsofgrupos.push_back(polygon_object);
+                p = new Polygon(polypontos, parse_color(child->Attribute("fill")));
+
             }
             else if (strcmp(child->Name(), "rect") == 0)
             {
@@ -231,15 +217,14 @@ namespace svg
                 points.push_back(corner2);
                 points.push_back(corner3);
                 points.push_back(corner4);
-                Rect *rect_object = new Rect(points, parse_color(child->Attribute("fill")));
-                const char *transform_attr = child->Attribute("transform");
-                const char *transform_origin = child->Attribute("transform-origin");
-                parseTransform(rect_object, transform_attr, transform_origin);
-                figsofgrupos.push_back(rect_object);
+               p = new Rect(points, parse_color(child->Attribute("fill")));
+          
             }
             else if (strcmp(child->Name(), "g") == 0)
             {
-                recursive(child, figsofgrupos, identif);
+                SVGElement* p=recursive(child);
+
+            }
             }
             else if (strcmp(child->Name(), "use") == 0)
             {
@@ -252,9 +237,16 @@ namespace svg
                 ident = child->Attribute("id");
                 identificadorsave(figsofgrupos, identif, ident);
             }
-            svg_elements.insert(svg_elements.end(), figsofgrupos.begin(), figsofgrupos.end());
-        }
+            if (child->Attribute("transform")){
+                const char *transform_attr = child->Attribute("transform");
+                const char *transform_origin = child->Attribute("transform-origin");
+                parseTransform(p, transform_attr, transform_origin);
+            }
+            figsofgrupos.push_back(p);
+        
+        return new Group(figsofgrupos);
     }
+    
     
     void delmapa(map<string, vector<SVGElement *>> &identif)
     {
@@ -282,8 +274,7 @@ namespace svg
 
         dimensions.x = xml_elem->IntAttribute("width");
         dimensions.y = xml_elem->IntAttribute("height");
-
-        map<string, vector<SVGElement *>> identif;
-        recursive(xml_elem, svg_elements, identif);
+        SVGElement* A = recursive(xml_elem, svg_elements, identif);
+        svg_elements.push_back(A);
     }
 }

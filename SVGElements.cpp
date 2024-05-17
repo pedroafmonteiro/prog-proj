@@ -260,4 +260,45 @@ namespace svg
     SVGElement* Rect::copy() const {
         return new Rect(points, fill, id);
     }
+
+
+
+    void Group::draw(PNGImage &img) const
+    {
+        for (auto y : V ){
+            y.draw(img);
+        }
+    }
+
+    void Group::translate(const Point &t)
+    {
+        for (auto y : V ){
+            y.translate(t);
+        }
+    }
+
+    void Group::rotate(const Point &origin, int degrees)
+    {
+        for (auto y : V ){
+            y.rotate(origin,degrees);
+        }
+    }
+
+    void Group::scale(const Point &origin, int v)
+    {
+        for (auto y : V ){
+            y.scale(origin,v);
+        }
+    }
+
+    Group::~Group()
+    {
+        for (auto y : V ){
+            delete y;
+        }
+    }
+
+    SVGElement* Group::copy() const{
+        return new Group(VectorFigs);
+    }
 }
