@@ -17,7 +17,7 @@ The image dimensions are obtained successfully with their respect width and heig
 
 ### Geometrical elements
 
-Every geometrical element have their own class defined in [SVGElements.hpp](SVGElements.hpp)derived from their superior element or from the SVGElement class. All elements have their respect attributes and support for identifiers and transformations parameters and functions.
+Every geometrical element have their own class defined in [SVGElements.hpp](SVGElements.hpp) derived from their superior element or from the SVGElement class. All elements have their respect attributes and support for identifiers and transformations parameters and functions.
 
 ### Element transformations
 
