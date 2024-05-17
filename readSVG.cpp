@@ -11,25 +11,7 @@ using namespace tinyxml2;
 
 namespace svg
 {
-    void identificadorload(vector<SVGElement *> &pFigs, map<string, vector<SVGElement *>> &identif, const string &ref)
-    {
-        vector<SVGElement *> temp;
-        string ident = ref.substr(1, string::npos); // tirar o '#' do href(referencia)//
-        temp = identif[ident];
-        for (SVGElement *elem : temp)
-        {
-            pFigs.push_back(elem->copy());
-        }
-    }
-    void identificadorsave(const vector<SVGElement *> &pFigs, map<string, vector<SVGElement *>> &identif, const string &ident)
-    {
-        vector<SVGElement *> temp;
-        for (SVGElement *elem : pFigs)
-        {
-            temp.push_back(elem->copy());
-        }
-        identif[ident] = temp;
-    }
+    map<string, SVGElement *> mapa_use;
 
     /**
      * @brief Transforms all the commas in a string to spaces.
@@ -142,21 +124,25 @@ namespace svg
         }
     }
 
-    SVGElement* recursive(XMLElement *pParent)
+    /**
+     * @brief Recursively parses an XML element and creates corresponding SVG elements.
+     * @param pParent The parent XML element to parse.
+     * @return A pointer to the created SVG element.
+     */
+    SVGElement *recursive(XMLElement *pParent)
     {
         vector<SVGElement *> figsofgrupos;
         for (XMLElement *child = pParent->FirstChildElement(); child != nullptr; child = child->NextSiblingElement())
         {
-            SVGElement * p;
+            SVGElement *p;
+            // Check which element to add to figsofgrupos.
             if (strcmp(child->Name(), "ellipse") == 0)
             {
                 p = new Ellipse(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, {child->IntAttribute("rx"), child->IntAttribute("ry")});
-       
             }
             else if (strcmp(child->Name(), "circle") == 0)
             {
                 p = new Circle(parse_color(child->Attribute("fill")), {child->IntAttribute("cx"), child->IntAttribute("cy")}, child->IntAttribute("r"));
-    
             }
             else if (strcmp(child->Name(), "polyline") == 0)
             {
@@ -165,18 +151,17 @@ namespace svg
                 istringstream iss(pontos);
                 vector<Point> polypontos;
                 Point temp;
+                // Get coordinates (x, y) from input.
                 while (iss >> temp.x)
                 {
                     iss >> temp.y;
                     polypontos.push_back(temp);
                 }
                 p = new Polyline(polypontos, parse_color(child->Attribute("stroke")));
-          
             }
             else if (strcmp(child->Name(), "line") == 0)
             {
-               p = new Line({child->IntAttribute("x1"), child->IntAttribute("y1")}, {child->IntAttribute("x2"), child->IntAttribute("y2")}, parse_color(child->Attribute("stroke")));
-            
+                p = new Line({child->IntAttribute("x1"), child->IntAttribute("y1")}, {child->IntAttribute("x2"), child->IntAttribute("y2")}, parse_color(child->Attribute("stroke")));
             }
             else if (strcmp(child->Name(), "polygon") == 0)
             {
@@ -185,13 +170,13 @@ namespace svg
                 istringstream iss(pontos);
                 vector<Point> polypontos;
                 Point temp;
+                // Get coordinates (x, y) from input.
                 while (iss >> temp.x)
                 {
                     iss >> temp.y;
                     polypontos.push_back(temp);
                 }
                 p = new Polygon(polypontos, parse_color(child->Attribute("fill")));
-
             }
             else if (strcmp(child->Name(), "rect") == 0)
             {
@@ -212,56 +197,51 @@ namespace svg
                 corner4.x = x;
                 corner4.y = y + height - 1;
 
-                vector<Point> points;
+                vector<Point> points; // Add every corner of the rectangle to a vector of points.
                 points.push_back(corner1);
                 points.push_back(corner2);
                 points.push_back(corner3);
                 points.push_back(corner4);
-               p = new Rect(points, parse_color(child->Attribute("fill")));
-          
+                p = new Rect(points, parse_color(child->Attribute("fill")));
             }
             else if (strcmp(child->Name(), "g") == 0)
             {
-                SVGElement* p=recursive(child);
-
-            }
+                p = recursive(child); // Recursive case call for groups.
             }
             else if (strcmp(child->Name(), "use") == 0)
             {
                 string ref = child->Attribute("href");
-                identificadorload(figsofgrupos, identif, ref);
+                string ident = ref.substr(1, string::npos);
+                // Copy the object from the map using the identifier as the key
+                p = mapa_use[ident]->copy();
             }
+            // Initialize an empty identifier
             string ident = "";
             if (child->Attribute("id"))
             {
+                // Get the id attribute of the child
                 ident = child->Attribute("id");
-                identificadorsave(figsofgrupos, identif, ident);
+                // Add the object to the map with the identifier as the key
+                mapa_use[ident] = p;
             }
-            if (child->Attribute("transform")){
+            if (child->Attribute("transform"))
+            {
                 const char *transform_attr = child->Attribute("transform");
                 const char *transform_origin = child->Attribute("transform-origin");
                 parseTransform(p, transform_attr, transform_origin);
             }
             figsofgrupos.push_back(p);
-        
+        }
         return new Group(figsofgrupos);
     }
-    
-    
-    void delmapa(map<string, vector<SVGElement *>> &identif)
-    {
-        // Iterate through the map and delete each vector of SVGElement pointers
-        for (auto &entry : identif)
-        {
-            for (SVGElement *element : entry.second)
-            {
-                delete element; // Deallocate memory for each SVGElement
-            }
-            entry.second.clear(); // Clear the vector
-        }
-        identif.clear(); // Clear the entire map
-    }
 
+    /**
+     * Reads an SVG file and extracts the dimensions and SVG elements.
+     *
+     * @param svg_file The path to the SVG file to be read.
+     * @param dimensions The reference to a Point object where the dimensions of the SVG will be stored.
+     * @param svg_elements The reference to a vector of SVGElement pointers where the extracted SVG elements will be stored.
+     */
     void readSVG(const string &svg_file, Point &dimensions, vector<SVGElement *> &svg_elements)
     {
         XMLDocument doc;
@@ -274,7 +254,7 @@ namespace svg
 
         dimensions.x = xml_elem->IntAttribute("width");
         dimensions.y = xml_elem->IntAttribute("height");
-        SVGElement* A = recursive(xml_elem, svg_elements, identif);
+        SVGElement *A = recursive(xml_elem);
         svg_elements.push_back(A);
     }
 }

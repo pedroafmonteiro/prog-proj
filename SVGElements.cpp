@@ -30,16 +30,33 @@ namespace svg
         img.draw_ellipse(center, radius, fill);
     }
 
+    /**
+     * @brief Translates the center of the ellipse by the given translation vector.
+     *
+     * @param t The translation vector.
+     */
     void Ellipse::translate(const Point &t)
     {
         center = center.translate(t);
     }
 
+    /**
+     * @brief Rotates the ellipse around a specified origin by a given number of degrees.
+     *
+     * @param origin The origin point around which the ellipse will be rotated.
+     * @param degrees The number of degrees by which the ellipse will be rotated.
+     */
     void Ellipse::rotate(const Point &origin, int degrees)
     {
         center = center.rotate(origin, degrees);
     }
 
+    /**
+     * @brief Scales the ellipse by a given factor around a specified origin point.
+     *
+     * @param origin The origin point around which the ellipse will be scaled.
+     * @param v The scaling factor.
+     */
     void Ellipse::scale(const Point &origin, int v)
     {
         center = center.scale(origin, v);
@@ -65,23 +82,6 @@ namespace svg
     {
         img.draw_ellipse(center, radius, fill);
     }
-
-    /* void Circle::translate(const Point &t)
-    {
-        center = center.translate(t);
-    }
-
-    void Circle::rotate(const Point &origin, int degrees)
-    {
-        center = center.rotate(origin, degrees);
-    }
-
-    void Circle::scale(const Point &origin, int v)
-    {
-        center = center.scale(origin, v);
-        radius.x = radius.x * v;
-        radius.y = radius.y * v;
-    } */
 
     /**
      * @brief Creates a copy of the Circle object.
@@ -117,6 +117,11 @@ namespace svg
         }
     }
 
+    /**
+     * @brief Translates the points of the polyline by the given translation vector.
+     *
+     * @param t The translation vector.
+     */
     void Polyline::translate(const Point &t)
     {
         for (size_t i = 0; i < points.size(); i++) {
@@ -124,6 +129,12 @@ namespace svg
         }
     }
 
+    /**
+     * @brief Rotates the polyline around a specified origin by a given number of degrees.
+     *
+     * @param origin The origin point around which the polyline will be rotated.
+     * @param degrees The number of degrees by which the polyline will be rotated.
+     */
     void Polyline::rotate(const Point &origin, int degrees)
     {
         for (size_t i = 0; i < points.size(); i++)
@@ -132,6 +143,12 @@ namespace svg
         }
     }
 
+    /**
+     * @brief Scales the polyline by a given factor around a specified origin point.
+     *
+     * @param origin The origin point around which the polyline will be scaled.
+     * @param v The scaling factor.
+     */
     void Polyline::scale(const Point &origin, int v)
     {
         for (size_t i = 0; i < points.size(); i++)
@@ -159,18 +176,35 @@ namespace svg
         img.draw_line(start, end, stroke);
     }
 
+    /**
+     * @brief Translates the points of the line by the given translation vector.
+     *
+     * @param t The translation vector.
+     */
     void Line::translate(const Point &t)
     {
         start = start.translate(t);
         end = end.translate(t);
     }
 
+    /**
+     * @brief Rotates the line around a specified origin by a given number of degrees.
+     *
+     * @param origin The origin point around which the line will be rotated.
+     * @param degrees The number of degrees by which the line will be rotated.
+     */
     void Line::rotate(const Point &origin, int degrees)
     {
         start = start.rotate(origin, degrees);
         end = end.rotate(origin, degrees);
     }
 
+    /**
+     * @brief Scales the line by a given factor around a specified origin point.
+     *
+     * @param origin The origin point around which the line will be scaled.
+     * @param v The scaling factor.
+     */
     void Line::scale(const Point &origin, int v)
     {
         start = start.scale(origin, v);
@@ -209,6 +243,11 @@ namespace svg
         img.draw_polygon(points, fill);
     }
 
+    /**
+     * @brief Translates the points of the polygon by the given translation vector.
+     *
+     * @param t The translation vector.
+     */
     void Polygon::translate(const Point &t)
     {
         for (size_t i = 0; i < points.size(); i++)
@@ -217,6 +256,12 @@ namespace svg
         }
     }
 
+    /**
+     * @brief Rotates the polygon around a specified origin by a given number of degrees.
+     *
+     * @param origin The origin point around which the polygon will be rotated.
+     * @param degrees The number of degrees by which the polygon will be rotated.
+     */
     void Polygon::rotate(const Point &origin, int degrees)
     {
         for (size_t i = 0; i < points.size(); i++)
@@ -225,6 +270,12 @@ namespace svg
         }
     }
 
+    /**
+     * @brief Scales the polygon by a given factor around a specified origin point.
+     *
+     * @param origin The origin point around which the polygon will be scaled.
+     * @param v The scaling factor.
+     */
     void Polygon::scale(const Point &origin, int v)
     {
         for (size_t i = 0; i < points.size(); i++)
@@ -261,36 +312,63 @@ namespace svg
         return new Rect(points, fill, id);
     }
 
-
-
+    /**
+     * @brief Draws a group on the given PNGImage.
+     *
+     * @param img The PNGImage to draw on.
+     */
     void Group::draw(PNGImage &img) const
     {
         for (auto y : V ){
-            y.draw(img);
+            y->draw(img);
         }
     }
 
+    /**
+     * @brief Translates the elements of the group by the given translation vector.
+     *
+     * @param t The translation vector.
+     */
     void Group::translate(const Point &t)
     {
         for (auto y : V ){
-            y.translate(t);
+            y->translate(t);
         }
     }
 
+    /**
+     * @brief Rotates the elements of the group around a specified origin by a given number of degrees.
+     *
+     * @param origin The origin point around which the elements will be rotated.
+     * @param degrees The number of degrees by which the elements will be rotated.
+     */
     void Group::rotate(const Point &origin, int degrees)
     {
         for (auto y : V ){
-            y.rotate(origin,degrees);
+            y->rotate(origin,degrees);
         }
     }
 
+    /**
+     * @brief Scales the elements of the group by a given factor around a specified origin point.
+     *
+     * @param origin The origin point around which the elements will be scaled.
+     * @param v The scaling factor.
+     */
     void Group::scale(const Point &origin, int v)
     {
         for (auto y : V ){
-            y.scale(origin,v);
+            y->scale(origin,v);
         }
     }
 
+
+    /**
+     * @brief Destructor for the Group class.
+     * 
+     * This destructor is responsible for freeing the memory allocated for the objects
+     * stored in the `V` vector.
+     */
     Group::~Group()
     {
         for (auto y : V ){
@@ -298,7 +376,16 @@ namespace svg
         }
     }
 
+    /**
+     * @brief Creates a deep copy of the Group object.
+     * 
+     * @return A pointer to the newly created Group object.
+     */
     SVGElement* Group::copy() const{
-        return new Group(VectorFigs);
+        std::vector<SVGElement*> temp;
+        for (auto y : V ){
+            temp.push_back(y->copy());
+        }
+        return new Group(temp);
     }
 }

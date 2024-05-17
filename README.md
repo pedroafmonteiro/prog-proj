@@ -25,4 +25,8 @@ All types of transformations (translate, rotate and scale) are well implemented 
 
 ### Groups
 
+The groups have been implemented using a derived subclass from SVGElement and uses a recursive function in [readSVG.cpp](readSVG.cpp) with all transformations working.
+
 ### Element duplication
+
+For elements that have an "id" attribute, they can be easily duplicated using <use> and their respective transformations.

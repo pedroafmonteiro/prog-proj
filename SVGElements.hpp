@@ -209,18 +209,28 @@ namespace svg
         SVGElement* copy() const override;                              // Declaration of the Rectangle's copy function.
     };
 
+    /**
+     * @class Group
+     * @brief Represents a group of SVG elements.
+     */
     class Group:public SVGElement
     {
     public:
-    Group(const std::vector<SVGElement*> &VectorFigs) : V(VectorFigs) {}
-    void draw(PNGImage &img) const override;
-    void translate(const Point &t) override;                        
-    void rotate(const Point &origin, 
-            int degrees) override;                             
+    /**
+     * @brief Constructs a Group object with the given vector of SVGElement pointers.
+     * 
+     * @param VectorFigs The vector of SVGElement pointers to be stored in the Group.
+     */
+    Group(const std::vector<SVGElement*> &VectorFigs) 
+    : V(VectorFigs) {}
+    void draw(PNGImage &img) const override;                            // Declaration of the Groups's draw function.
+    void translate(const Point &t) override;                            // Declaration of the Groups's translate function.
+    void rotate(const Point &origin,                                    
+            int degrees) override;                                      // Declaration of the Groups's rotate function.
     void scale(const Point &origin, 
-            int v) override;
+            int v) override;                                            // Declaration of the Groups's scale function.
     ~Group();
-    SVGElement* copy() const override;
+    SVGElement* copy() const override;                                  // Declaration of the Groups's copy function.
     private:
         std::vector<SVGElement*> V;                    
     };
