@@ -13,11 +13,11 @@ This project concerns the conversion of images from the SVG vectorial format to 
 ## Accomplished tasks
 ### SVG reading logic in [readSVG.cpp](readSVG.cpp)
 
-The image dimensions are obtained successfully with their respect width and height and every type of element can be dynamically allocated as a SVGElement* pointer.
+The image dimensions are obtained successfully with their respective width and height and every type of element can be dynamically allocated as a SVGElement* pointer.
 
 ### Geometrical elements
 
-Every geometrical element have their own class defined in [SVGElements.hpp](SVGElements.hpp) derived from their superior element or from the SVGElement class. All elements have their respect attributes and support for identifiers and transformations parameters and functions.
+Every geometrical element have their own class defined in [SVGElements.hpp](SVGElements.hpp) derived from their superior element or from the SVGElement class. All elements have their respective attributes and support for identifiers and transformations parameters and functions.
 
 ### Element transformations
 
