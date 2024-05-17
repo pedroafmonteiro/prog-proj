@@ -86,11 +86,6 @@ namespace svg
         : Ellipse(fill, center, {radius , radius}, id) { };
 
         void draw(PNGImage &img) const override;                        // Declaration of the Circle's draw function.
-        /* void translate(const Point &t) override;                        // Declaration of the Circle's translate function.
-        void rotate(const Point &origin, 
-                     int degrees) override;                             // Declaration of the Circle's rotate function.
-        void scale(const Point &origin, 
-                    int v) override;                                    // Declaration of the Circle's scale function. */
         SVGElement* copy() const override;                              // Declaration of the Circle's copy function.
     };
 
@@ -211,11 +206,6 @@ namespace svg
         : Polygon(points, fill, id) { };
 
         void draw(PNGImage &img) const override;                        // Declaration of the Rectangle's draw function.
-        /* void translate(const Point &t) override;                        // Declaration of the Rectangle's translate function.
-        void rotate(const Point &origin, 
-                     int degrees) override;                             // Declaration of the Rectangle's rotate function.
-        void scale(const Point &origin, 
-                    int v) override;                                    // Declaration of the Rectangle's scale function. */
         SVGElement* copy() const override;                              // Declaration of the Rectangle's copy function.
     };
 }
